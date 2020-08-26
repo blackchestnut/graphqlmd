@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'graphqlmd'
+require 'optparse'
+
+options = {
+  url: 'http://localhost:3000/graphql',
+  is_hide_client_mutation_id: true,
+  is_hide_scalar: true,
+  is_hide_deprecated: false,
+  is_allow_links: true,
+  is_vuepress: false
+}
+
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: graphqlmd [options]'
+
+  opts.on_tail '-v', '--version', 'Show version' do
+    puts "graphqlmd v#{Graphqlmd::VERSION}"
+    exit
+  end
+
+  opts.on(
+    '-u', '--url [URL]', "GraphQL schema url (default: #{options[:url]})"
+  ) do |url|
+    options[:url] = url
+  end
+
+  opts.on '--no-deprecated', 'Do not add deprecated objects, fields, args and etc.' do
+    options[:is_hide_deprecated] = true
+  end
+
+  opts.on '--no-links', 'Do not add links with anchors' do
+    options[:is_allow_links] = false
+  end
+
+  opts.on '--client-mutation-id', 'Add clientMutationId to docs' do
+    options[:is_hide_client_mutation_id] = false
+  end
+
+  opts.on '--scalar', 'Add scalar objects to docs' do
+    options[:is_hide_scalar] = false
+  end
+
+  opts.on '--vuepress', 'Use vuepress additional styles' do
+    options[:is_vuepress] = true
+  end
+
+  opts.on_tail '-h', '--help', 'Show this message' do
+    puts opts
+    exit
+  end
+end.parse!
+
+Graphqlmd.hi
