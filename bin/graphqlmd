@@ -53,4 +53,4 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-Graphqlmd.hi
+::Graphqlmd::Graphqlmd.new(options).call
