@@ -66,6 +66,7 @@ private
       puts "\n### #{v['name']}\n"
       puts "#{print_description v['description']}\n" unless v['description'].nil?
       print_fields v['fields'] || v['inputFields']
+      print_enum_values v['enumValues']
     end
 
     nil
@@ -86,6 +87,19 @@ private
       next if v['name'] == CLIENT_MUTATION_ID && @is_hide_client_mutation_id
 
       puts "#{v['name']} | #{type_as_string(v['type'])} | #{print_description(v['description'])}\n"
+    end
+  end
+
+  # TODO: Print deprecationReason for Enum Values
+  def print_enum_values values
+    return if values.nil?
+    return if values.empty?
+
+    puts "\n**Values**\n"
+    puts "Name | Description\n"
+    puts "-|-\n"
+    values.each do |v|
+      puts "#{v['name']} | #{print_description(v['description'])}\n"
     end
   end
 

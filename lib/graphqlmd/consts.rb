@@ -24,6 +24,7 @@ module Graphqlmd
       }
       enumValues(includeDeprecated: true) {
         name
+        description
         isDeprecated
         deprecationReason
       }
