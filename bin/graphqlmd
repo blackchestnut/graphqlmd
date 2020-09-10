@@ -9,7 +9,10 @@ options = {
   is_hide_scalar: true,
   is_hide_deprecated: false,
   is_allow_links: true,
-  is_vuepress: false
+  is_vuepress: false,
+  ignored_queries: [],
+  ignored_mutations: [],
+  ignored_objects: []
 }
 
 
@@ -45,6 +48,18 @@ OptionParser.new do |opts|
 
   opts.on '--vuepress', 'Use vuepress additional styles' do
     options[:is_vuepress] = true
+  end
+
+  opts.on '--ignored-queries a,b,c', Array, 'List of ignored and skipped Queries' do |list|
+    options[:ignored_queries] = list
+  end
+
+  opts.on '--ignored-mutations a,b,c', Array, 'List of ignored and skipped Mutations' do |list|
+    options[:ignored_mutations] = list
+  end
+
+  opts.on '--ignored-objects a,b,c', Array, 'List of ignored and skipped Objects' do |list|
+    options[:ignored_objects] = list
   end
 
   opts.on_tail '-h', '--help', 'Show this message' do

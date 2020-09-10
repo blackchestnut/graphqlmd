@@ -14,6 +14,9 @@ class Graphqlmd::Graphqlmd
     @is_hide_scalar = options[:is_hide_scalar]
     @is_allow_links = options[:is_allow_links]
     @is_vuepress = options[:is_vuepress]
+    @ignored_queries = options[:ignored_queries]
+    @ignored_mutations = options[:ignored_mutations]
+    @ignored_objects = options[:ignored_objects]
   end
 
   def call
@@ -28,7 +31,9 @@ private
 
   def puts_queries data
     print_header 'Queries'
-    queries = data['fields'].sort_by { |v| v['name'] }
+    queries = data['fields']
+      .reject { |v| @ignored_queries.include? v['name'] }
+      .sort_by { |v| v['name'] }
 
     queries.each do |v|
       puts "\n### #{v['name']}\n"
@@ -42,7 +47,10 @@ private
 
   def puts_mutations data
     print_header 'Mutations'
-    mutations = data['fields'].sort_by { |v| v['name'] }
+    mutations = data['fields']
+      .reject { |v| @ignored_mutations.include? v['name'] }
+      .sort_by { |v| v['name'] }
+
     mutations = mutations.reject { |v| v['isDeprecated'] } if @is_hide_deprecated
 
     mutations.each do |v|
@@ -59,6 +67,7 @@ private
     print_header 'Objects'
     objects = data
       .reject { |v| IGNORED_OBJECT_NAMES.include? v['name'] }
+      .reject { |v| @ignored_objects.include? v['name'] }
       .sort_by { |v| v['name'] }
     objects = objects.reject { |v| v['kind'] == SCALAR } if @is_hide_scalar
 
