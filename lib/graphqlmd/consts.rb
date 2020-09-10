@@ -18,6 +18,8 @@ module Graphqlmd
       }
       inputFields {
         ...InputValue
+        description
+        defaultValue
       }
       interfaces {
         ...TypeRef
