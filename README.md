@@ -34,5 +34,5 @@ gem install graphqlmd
 
 ## Sponsors
 
-- [Agile Season](https://agileseason.com/)
-- [CardWiz](https://cardwiz.com/)
+- [Agile Season](https://agileseason.com/?utm_source=graphqlmd)
+- [CardWiz](https://cardwiz.com/?utm_source=graphqlmd)
