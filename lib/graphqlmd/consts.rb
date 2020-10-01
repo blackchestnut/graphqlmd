@@ -39,32 +39,41 @@ module Graphqlmd
       type {
         ...TypeRef
       }
+      description
       defaultValue
     }
     fragment TypeRef on __Type {
       kind
       name
+      description
       ofType {
         kind
         name
+        description
         ofType {
           kind
           name
+          description
           ofType {
             kind
             name
+            description
             ofType {
               kind
               name
+              description
               ofType {
                 kind
                 name
+                description
                 ofType {
                   kind
                   name
+                  description
                   ofType {
                     kind
                     name
+                    description
                   }
                 }
               }

@@ -9,7 +9,10 @@ class Graphqlmd::Graphqlmd
 
   def initialize options
     @url = options[:url]
+    @title = options[:title]
+    @note = options[:note]
     @is_hide_client_mutation_id = options[:is_hide_client_mutation_id]
+    @is_hide_table_of_contents = options[:is_hide_table_of_contents]
     @is_hide_deprecated = options[:is_hide_deprecated]
     @is_hide_scalar = options[:is_hide_scalar]
     @is_allow_links = options[:is_allow_links]
@@ -22,6 +25,10 @@ class Graphqlmd::Graphqlmd
   def call
     response = fetch_schema
     data = JSON.parse(response.body).dig 'data', 'schema'
+
+    puts_title
+    puts_note
+    puts_top_table_of_contents
     puts_queries data['queries']
     puts_mutations data['mutations']
     puts_objects data['types']
@@ -29,11 +36,36 @@ class Graphqlmd::Graphqlmd
 
 private
 
+  def puts_title
+    return if @title.nil?
+    return if @title.empty?
+
+    puts "# #{@title}\n\n"
+  end
+
+  def puts_note
+    return if @note.nil?
+    return if @note.empty?
+
+    puts "#{@note}\n\n"
+  end
+
+  def puts_top_table_of_contents
+    return if @is_hide_table_of_contents
+
+    puts '- [Queries](#queries)'
+    puts '- [Mutations](#mutations)'
+    puts '- [Objects](#objects)'
+    puts "\n"
+  end
+
   def puts_queries data
     print_header 'Queries'
     queries = data['fields']
       .reject { |v| @ignored_queries.include? v['name'] }
       .sort_by { |v| v['name'] }
+
+    puts_table_of_contents queries
 
     queries.each do |v|
       puts "\n### #{v['name']}\n"
@@ -50,8 +82,9 @@ private
     mutations = data['fields']
       .reject { |v| @ignored_mutations.include? v['name'] }
       .sort_by { |v| v['name'] }
-
     mutations = mutations.reject { |v| v['isDeprecated'] } if @is_hide_deprecated
+
+    puts_table_of_contents mutations
 
     mutations.each do |v|
       puts "\n### #{v['name']}\n"
@@ -71,6 +104,8 @@ private
       .sort_by { |v| v['name'] }
     objects = objects.reject { |v| v['kind'] == SCALAR } if @is_hide_scalar
 
+    puts_table_of_contents objects
+
     objects.each do |v|
       puts "\n### #{v['name']}\n"
       puts "#{print_description v['description']}\n" unless v['description'].nil?
@@ -83,6 +118,14 @@ private
 
   def print_header value
     puts "## #{value}\n"
+  end
+
+  def puts_table_of_contents items
+    return if @is_hide_table_of_contents
+
+    items.each do |v|
+      puts "- [#{v['name']}](##{v['name'].downcase})"
+    end
   end
 
   def print_fields fields
@@ -120,7 +163,8 @@ private
     puts "Name | Type | Description\n"
     puts "-|-|-|-\n"
     args.each do |v|
-      puts "#{v['name']} | #{type_as_string(v['type'])} | #{print_description(v['description'])}\n"
+      description = v['description'] || (v['type'] && v['type']['ofType'] && v['type']['ofType']['description'])
+      puts "#{v['name']} | #{type_as_string(v['type'])} | #{print_description(description)}\n"
     end
   end
 

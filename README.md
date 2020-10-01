@@ -12,8 +12,11 @@ graphqlmd -u GRAPHQL_ENDPOINT_URL > schema.md
 
 Usage: graphqlmd [options]
     -u, --url [URL]                  GraphQL schema url (default: http://localhost:3000/graphql)
+    -t, --title [TITLE]              Title (default: GraphQL API)
+        --note [NOTE]                Text after title (default: nil)
         --no-deprecated              Do not add deprecated objects, fields, args and etc.
         --no-links                   Do not add links with anchors to docs
+        --no-table-of-contents       Do not add table of contents
         --client-mutation-id         Add clientMutationId to docs
         --scalar                     Add scalar objects to docs
         --vuepress                   Use vuepress additional styles

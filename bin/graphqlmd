@@ -5,9 +5,12 @@ require 'optparse'
 
 options = {
   url: 'http://localhost:3000/graphql',
+  title: 'GraphQL API',
+  note: nil,
   is_hide_client_mutation_id: true,
   is_hide_scalar: true,
   is_hide_deprecated: false,
+  is_hide_table_of_contents: false,
   is_allow_links: true,
   is_vuepress: false,
   ignored_queries: [],
@@ -30,12 +33,26 @@ OptionParser.new do |opts|
     options[:url] = url
   end
 
+  opts.on(
+    '-t', '--title [TITLE]', "Title (default: #{options[:title]})"
+  ) do |title|
+    options[:title] = title
+  end
+
+  opts.on '--note [NOTE]', 'Text after title (default: nil)' do |note|
+    options[:note] = note
+  end
+
   opts.on '--no-deprecated', 'Do not add deprecated objects, fields, args and etc.' do
     options[:is_hide_deprecated] = true
   end
 
   opts.on '--no-links', 'Do not add links with anchors to docs' do
     options[:is_allow_links] = false
+  end
+
+  opts.on '--no-table-of-contents', 'Do not add table of contents' do
+    options[:is_hide_table_of_contents] = true
   end
 
   opts.on '--client-mutation-id', 'Add clientMutationId to docs' do
