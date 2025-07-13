@@ -161,7 +161,7 @@ private
 
     puts "#### Arguments\n"
     puts "Name | Type | Description\n"
-    puts "-|-|-|-\n"
+    puts "-|-|-\n"
     args.each do |v|
       description = v['description'] || (v['type'] && v['type']['ofType'] && v['type']['ofType']['description'])
       puts "#{v['name']} | #{type_as_string(v['type'])} | #{print_description(description)}\n"
